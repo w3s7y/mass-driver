@@ -5,7 +5,7 @@ The project uses semantic versioning (see [semver](https://semver.org)).
 
 ## [Unreleased]
 
-### Changed 
+### Changed
 
 - Updated `pydantic` and refactor from `v1` to `^2.7`
 - Updated `astroid` lib to `^3.2.0`
@@ -14,7 +14,6 @@ The project uses semantic versioning (see [semver](https://semver.org)).
     - See [Github announcement](https://github.blog/changelog/2023-09-22-github-actions-transitioning-from-node-16-to-node-20/)
   - Update next `python` version used in tests from beta to latest `3.12` release
   - Update docs build to run on `3.12`
-
 
 ## v0.18.0 - 2023-11-21
 
