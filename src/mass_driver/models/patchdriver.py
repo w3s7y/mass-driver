@@ -2,7 +2,7 @@
 from enum import Enum
 from logging import Logger
 
-from pydantic import ConfigDict, BaseModel, Extra
+from pydantic import BaseModel
 
 from mass_driver.models.repository import ClonedRepo
 
