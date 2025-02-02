@@ -47,10 +47,7 @@ class PatchDriver(BaseModel):
         """Grab the logger of this driver, as passed dynamically via mass-driver code"""
         return self._logger
 
-    class Config:
-        """Pydantic config of the PatchDriver class"""
-
-        underscore_attrs_are_private = True
-        """Ensure we can set internal non-serializeable fields via underscore"""
-        extra = Extra.allow
+    model_config = {
+        "private_attributes": {"_hidden_params"}
+    }
 
