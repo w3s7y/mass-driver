@@ -44,8 +44,9 @@ def clone_if_remote(repo_path: str, logger: logging.Logger) -> GitRepo:
         # Clone it into cache anyway
         return GitRepo(path=repo_path)  # TODO: Actually clone-move the repo on the way.
 
-    clone_target = Path(build_clone_target(repo_path))
-    split_target = clone_target.split("/")
+    target = build_clone_target(repo_path)
+    split_target = target.split("/")
+    clone_target = Path(target)
     repo_name = split_target[len(split_target)-1]
 
     logger.info(f"Using {clone_target} to store repo {repo_name}")
