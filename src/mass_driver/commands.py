@@ -68,11 +68,20 @@ def plugins_command(
 
 
 def run_command(args: Namespace) -> ActivityOutcome:
-    """Process the CLI for 'run'"""
+    """
+    Run mass-driver
+
+    Args:
+        args: CLI args
+
+    Returns:
+        Outcomes
+    """
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
     logger = logging.getLogger("run")
     logger.info("Run mode!")
     activity_str = args.activity_file.read()
+
     try:
         activity = ActivityLoaded.from_config(activity_str)
     except ValidationError as e:
@@ -81,19 +90,19 @@ def run_command(args: Namespace) -> ActivityOutcome:
     except ImportError as e:
         logger.exception(e)
         raise e
+
     # Source discovery to know what repos to patch/forge/scan
     source_config = activity.source
     repos_sourced = source_repolist_args(args)
     sum_logger = logging.getLogger("summarize")
+
     if repos_sourced is None:  # No repo-list from CLI flags: call Source
         repos_sourced = source_config.source.discover()
         summarize_source(repos_sourced, sum_logger)
+
     if needs_run(activity):
-        run_result = thread_run(
-            activity,
-            repos_sourced,
-            not args.no_cache,
-        )
+        run_result = thread_run(activity, repos_sourced)
+
         if activity.migration is not None and run_result.migration_result is not None:
             summarize_migration(run_result.migration_result, sum_logger)
 
