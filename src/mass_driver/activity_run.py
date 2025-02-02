@@ -42,7 +42,7 @@ def thread_run(activity: ActivityLoaded, repos: IndexedRepos) -> ActivityOutcome
         what_array.append(f"{migration.driver=}")
         patch_results = {}
 
-    logger.info(f"Processing {repo_count} with {' and '.join(what_array)}, via Threads")
+    logger.info(f"Processing {repo_count} with {' and '.join(what_array)}")
 
     futures_map = {}
     with futures.ThreadPoolExecutor(max_workers=int(os.environ.get("MASS_DRIVER_THREADS", 8))) as executor:

@@ -36,7 +36,7 @@ def clone_repo(
     cloned_repo = ClonedRepo(
         cloned_path=repo_local_path,
         current_branch=repo_gitobj.active_branch.name,
-        **repo.dict(),
+        **repo.model_dump(),
     )
     return cloned_repo, repo_gitobj
 

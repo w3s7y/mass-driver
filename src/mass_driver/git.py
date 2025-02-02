@@ -7,6 +7,36 @@ from git import Repo as GitRepo
 from mass_driver.models.migration import MigrationLoaded
 
 
+def build_clone_target(repo_path: str) -> str:
+    """
+    Resolves the repos clone URL into something we can write locally (a filesystem path)
+
+    Args:
+        repo_path: The clone URL
+
+    Returns:
+        clone_target
+    """
+    if repo_path.startswith("https://"):
+        proto_cut = repo_path.split("https://")[1]
+        minus_host = proto_cut.split("/")[1:]
+    elif repo_path.startswith("git@"):
+        proto_cut = repo_path.split("git@")[1]
+        minus_host = proto_cut.split(":")[1:]
+    else:
+        org = "local"
+        repo_name = Path(repo_path).name
+        return f".mass_driver/{org}/{repo_name}"
+
+    repo_name = minus_host[len(minus_host)-1]
+    minus_host.remove(repo_name)
+    org = ""
+    for p in minus_host:
+        org = org + p + "/"
+
+    return f".mass_driver/{org}{repo_name}"
+
+
 def clone_if_remote(repo_path: str, logger: logging.Logger) -> GitRepo:
     """Build a GitRepo; If repo_path isn't a directory, clone it"""
     if Path(repo_path).is_dir():
@@ -14,23 +44,10 @@ def clone_if_remote(repo_path: str, logger: logging.Logger) -> GitRepo:
         # Clone it into cache anyway
         return GitRepo(path=repo_path)  # TODO: Actually clone-move the repo on the way.
 
-    # SSH clone URL e.g: git@github.com:OverkillGuy/python-template
-    if repo_path.startswith("git@"):  # It's an SSH clone URL
-        *_junk, repo_blurb = repo_path.split(":")
-        org, repo_name = repo_blurb.split("/")
-    elif repo_path.startswith("http"): # it's an HTTP(s) clone URL
-        http_junk, repo_blurb = repo_path.split("://")
-        path = repo_blurb.split("/")
-        path_list = path[:-1]
-        org = ""
-        for bit in path_list:
-            org = org + f"/{bit}"
-        repo_name = path[-1]
-    else:
-        org = "local"
-        repo_name = Path(repo_path).name
+    clone_target = build_clone_target(repo_path)
+    split_target = clone_target.split("/")
+    repo_name = split_target[len(split_target)-1]
 
-    clone_target = Path(f".mass_driver/{org[1:]}/{repo_name}")
     logger.info(f"Using {clone_target} to store repo {repo_name}")
 
     if clone_target.is_dir():

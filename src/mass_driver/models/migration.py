@@ -49,13 +49,13 @@ def load_migration(migration_config: str) -> MigrationFile:
             "Migration Config file given invalid: "
             f"Missing top-level '{TOML_PROJECTKEY}' key"
         )
-    return MigrationFile.parse_obj(migration_dict[TOML_PROJECTKEY])
+    return MigrationFile.model_validate(migration_dict[TOML_PROJECTKEY])
 
 
 def driver_from_config(config: MigrationFile) -> PatchDriver:
     """Create PatchDriver instance from config file (TOML)"""
     driver_class = get_driver(config.driver_name)
-    return driver_class.parse_obj(config.driver_config)
+    return driver_class.model_validate(config.driver_config)
 
 
 def load_driver(config: MigrationFile) -> MigrationLoaded:
@@ -66,7 +66,7 @@ def load_driver(config: MigrationFile) -> MigrationLoaded:
         if config.branch_name is None
         else config.branch_name
     )
-    migration = MigrationLoaded(driver=driver, **(config.dict()))
+    migration = MigrationLoaded(driver=driver, **(config.model_dump()))
     migration.branch_name = branch_name_override
     return migration
 
@@ -114,7 +114,7 @@ def load_forge_toml(forge_config: str) -> ForgeFile:
         raise ValueError(
             "Config file given invalid: " f"Missing top-level '{TOML_PROJECTKEY}' key"
         )
-    return ForgeFile.parse_obj(forge_dict[TOML_PROJECTKEY])
+    return ForgeFile.model_validate(forge_dict[TOML_PROJECTKEY])
 
 
 def forge_from_config(config: ForgeFile) -> ForgeLoaded:
@@ -123,7 +123,7 @@ def forge_from_config(config: ForgeFile) -> ForgeLoaded:
     forge_obj = forge_class(**config.forge_config)
     return ForgeLoaded(
         forge=forge_obj,
-        **(config.dict()),
+        **(config.model_dump()),
     )
 
 

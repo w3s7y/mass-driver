@@ -72,14 +72,14 @@ build-backend = "poetry.core.masonry.api"
 # As per https://pycqa.github.io/isort/docs/configuration/black_compatibility/#using-a-config-file-such-as-isortcfg
 
 
-[tool.pytest.ini_options]
-addopts = """-vv \
-      --doctest-modules \
-      --cov=mass_driver \
-      --cov-report=xml:test_results/coverage.xml \
-      --cov-report=html:test_results/coverage.html \
-      --cov-report=term \
-      --junit-xml=test_results/results.xml"""
+#[tool.pytest.ini_options]
+#addopts = """-vv \
+#      --doctest-modules \
+#      --cov=mass_driver \
+#      --cov-report=xml:test_results/coverage.xml \
+#      --cov-report=html:test_results/coverage.html \
+#      --cov-report=term \
+#      --junit-xml=test_results/results.xml"""
 
 [tool.ruff]
 # Always fix what you can, without needing CLI flags
